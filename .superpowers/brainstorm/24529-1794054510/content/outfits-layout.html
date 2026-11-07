@@ -1,0 +1,103 @@
+<h2>How should she see her outfits?</h2>
+<p class="subtitle">Three ways the outfits screen could work. Clothes are rough placeholders here, the real demo uses photo cutouts. Click the one that feels right (or say "A but with…").</p>
+
+<style>
+  .phones { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:20px; margin-top:12px; }
+  .phone { width:230px; height:470px; margin:0 auto; border-radius:36px; background:#fbf8f4; border:8px solid #111; position:relative; overflow:hidden; font-family:-apple-system,system-ui,sans-serif; color:#111; }
+  .notch { width:80px; height:20px; background:#111; border-radius:12px; margin:6px auto 0; }
+  .pad { padding:10px 14px; }
+  .h { font-size:20px; font-weight:800; letter-spacing:-.5px; line-height:1.05; }
+  .hand { font-family:"Marker Felt","Chalkboard SE",cursive; }
+  .sm { font-size:10px; color:#777; }
+  .stk svg { filter:drop-shadow(0 0 0 #fff) drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 4px 6px rgba(0,0,0,.18)); }
+  .cta { position:absolute; left:14px; right:14px; bottom:16px; height:38px; border-radius:20px; background:#111; color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .dots { display:flex; gap:4px; justify-content:center; margin-top:6px; } .dots i{width:5px;height:5px;border-radius:3px;background:#ccc;display:block} .dots i.on{background:#111;width:14px}
+  .rowlbl { font-size:9px; font-weight:700; letter-spacing:.8px; color:#999; margin:6px 0 2px; }
+  .strip { display:flex; gap:8px; align-items:center; overflow:hidden; }
+  .strip .stk { flex:0 0 auto; opacity:.45; transform:scale(.8); } .strip .stk.sel{opacity:1; transform:scale(1)}
+  .chip { display:inline-block; font-size:9px; padding:3px 8px; border-radius:10px; background:#fff; border:1px solid #e5e0d8; margin-right:4px; }
+  .swap { position:absolute; width:18px; height:18px; border-radius:9px; background:#111; color:#fff; font-size:10px; display:flex; align-items:center; justify-content:center; }
+</style>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="tee" viewBox="0 0 100 90"><path d="M30 5 L42 2 Q50 12 58 2 L70 5 L95 22 L84 40 L74 34 L74 88 L26 88 L26 34 L16 40 L5 22 Z"/></symbol>
+    <symbol id="skirt" viewBox="0 0 100 90"><path d="M28 4 L72 4 L74 14 L94 86 L6 86 L26 14 Z"/></symbol>
+    <symbol id="jeans" viewBox="0 0 80 120"><path d="M10 2 L70 2 L74 118 L48 118 L40 40 L32 118 L6 118 Z"/></symbol>
+    <symbol id="shoe" viewBox="0 0 100 50"><path d="M4 30 Q6 12 22 12 L40 14 Q56 26 80 28 Q96 30 96 40 L96 46 L4 46 Z"/></symbol>
+    <symbol id="bag" viewBox="0 0 80 80"><path d="M22 28 Q22 6 40 6 Q58 6 58 28" fill="none" stroke-width="5"/><rect x="8" y="26" width="64" height="50" rx="8"/></symbol>
+    <symbol id="cardi" viewBox="0 0 100 100"><path d="M28 4 L50 30 L72 4 L96 24 L86 96 L54 96 L50 40 L46 96 L14 96 L4 24 Z"/></symbol>
+  </defs>
+</svg>
+
+<div class="phones">
+
+  <div class="option" data-choice="lookbook" onclick="toggleSelect(this)" style="display:block">
+    <div class="phone"><div class="notch"></div>
+      <div class="pad">
+        <div class="sm">Saturday · 18°</div>
+        <div class="h">Today's<br>looks</div>
+        <div style="position:relative;height:250px;margin-top:8px;background:#f1e9df;border-radius:22px">
+          <div class="stk" style="position:absolute;left:52px;top:18px"><svg width="96" height="86" fill="#c9a27e"><use href="#cardi"/></svg></div>
+          <div class="stk" style="position:absolute;left:62px;top:100px"><svg width="76" height="96" fill="#2f3b52"><use href="#jeans"/></svg></div>
+          <div class="stk" style="position:absolute;left:128px;top:150px"><svg width="56" height="56" fill="#7a1f2b" stroke="#7a1f2b"><use href="#bag"/></svg></div>
+          <div class="stk" style="position:absolute;left:20px;top:200px"><svg width="70" height="34" fill="#f4f1ea"><use href="#shoe"/></svg></div>
+          <div class="hand" style="position:absolute;right:12px;top:14px;font-size:13px;transform:rotate(6deg)">coffee date ☕</div>
+        </div>
+        <div class="dots"><i class="on"></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="cta">Wear this</div>
+    </div>
+    <div class="content" style="text-align:center;margin-top:10px"><h3>A · Lookbook</h3><p>The app styles full outfits. She swipes through them one at a time, like a magazine.</p></div>
+  </div>
+
+  <div class="option" data-choice="mixmatch" onclick="toggleSelect(this)" style="display:block">
+    <div class="phone"><div class="notch"></div>
+      <div class="pad">
+        <div class="h">Mix &amp; match</div>
+        <div class="rowlbl">TOPS</div>
+        <div class="strip">
+          <div class="stk"><svg width="50" height="45" fill="#e8d9c4"><use href="#tee"/></svg></div>
+          <div class="stk sel"><svg width="64" height="64" fill="#c9a27e"><use href="#cardi"/></svg></div>
+          <div class="stk"><svg width="50" height="45" fill="#111"><use href="#tee"/></svg></div>
+          <div class="stk"><svg width="50" height="45" fill="#9fb4c7"><use href="#tee"/></svg></div>
+        </div>
+        <div class="rowlbl">BOTTOMS</div>
+        <div class="strip">
+          <div class="stk"><svg width="48" height="44" fill="#e7c6c9"><use href="#skirt"/></svg></div>
+          <div class="stk sel"><svg width="52" height="78" fill="#2f3b52"><use href="#jeans"/></svg></div>
+          <div class="stk"><svg width="48" height="44" fill="#111"><use href="#skirt"/></svg></div>
+        </div>
+        <div class="rowlbl">SHOES</div>
+        <div class="strip">
+          <div class="stk"><svg width="54" height="27" fill="#111"><use href="#shoe"/></svg></div>
+          <div class="stk sel"><svg width="70" height="34" fill="#f4f1ea"><use href="#shoe"/></svg></div>
+          <div class="stk"><svg width="54" height="27" fill="#a0522d"><use href="#shoe"/></svg></div>
+        </div>
+      </div>
+      <div class="cta">🔀 Shuffle</div>
+    </div>
+    <div class="content" style="text-align:center;margin-top:10px"><h3>B · Mix &amp; match</h3><p>She builds the outfit herself by sliding a row each for tops, bottoms and shoes. Shuffle picks for her.</p></div>
+  </div>
+
+  <div class="option" data-choice="hybrid" onclick="toggleSelect(this)" style="display:block">
+    <div class="phone"><div class="notch"></div>
+      <div class="pad">
+        <div class="h">Today's<br>looks</div>
+        <div style="margin-top:6px"><span class="chip">☀️ Casual</span><span class="chip">💼 Work</span><span class="chip">🍸 Night out</span></div>
+        <div style="position:relative;height:250px;margin-top:8px;background:#efe3e3;border-radius:22px">
+          <div class="stk" style="position:absolute;left:58px;top:16px"><svg width="86" height="77" fill="#111"><use href="#tee"/></svg></div>
+          <div class="swap" style="left:140px;top:20px">⇄</div>
+          <div class="stk" style="position:absolute;left:52px;top:96px"><svg width="96" height="86" fill="#e7c6c9"><use href="#skirt"/></svg></div>
+          <div class="swap" style="left:148px;top:104px">⇄</div>
+          <div class="stk" style="position:absolute;left:30px;top:196px"><svg width="70" height="34" fill="#111"><use href="#shoe"/></svg></div>
+          <div class="stk" style="position:absolute;left:140px;top:170px"><svg width="52" height="52" fill="#c9a27e" stroke="#c9a27e"><use href="#bag"/></svg></div>
+        </div>
+        <div class="sm" style="text-align:center;margin-top:6px">swipe for another look · tap ⇄ to swap a piece</div>
+      </div>
+      <div class="cta">Wear this</div>
+    </div>
+    <div class="content" style="text-align:center;margin-top:10px"><h3>C · Both</h3><p>Outfits come ready-made like A, but she can tap any piece to swap it for something else from her closet.</p></div>
+  </div>
+
+</div>

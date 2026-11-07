@@ -1,0 +1,183 @@
+<h2>Proposed onboarding → paywall flow</h2>
+<p class="subtitle">12 screens. Pink tags = new screens; grey = already built. Click any screen you'd change, and tell me in the chat.</p>
+
+<style>
+  .flow { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:18px; margin-top:10px; }
+  .step { cursor:pointer; }
+  .ph { width:180px; height:370px; margin:0 auto; border-radius:30px; background:#F3EDE4; border:7px solid #111; position:relative; overflow:hidden; font-family:-apple-system,system-ui,sans-serif; color:#1B1714; }
+  .ph.dark { background:#000; color:#fff; }
+  .nt { width:64px; height:16px; background:#111; border-radius:10px; margin:5px auto 0; }
+  .in { padding:8px 12px; }
+  .ser { font-family:"New York","Iowan Old Style",Georgia,serif; font-weight:700; letter-spacing:-.3px; line-height:1.08; }
+  .hand { font-family:"Bradley Hand","Marker Felt",cursive; font-weight:700; }
+  .soft { color:#7A6F66; font-size:9px; }
+  .bar { height:3px; border-radius:2px; background:#E4DBCF; margin:4px 0 10px; } .bar i{display:block;height:3px;border-radius:2px;background:#1B1714}
+  .opt { background:#FBF8F3; border:1px solid #E4DBCF; border-radius:12px; padding:7px 9px; font-size:10px; font-weight:600; margin-bottom:5px; }
+  .opt.on { background:#1B1714; color:#fff; border-color:#1B1714; }
+  .cta { position:absolute; left:12px; right:12px; bottom:12px; height:32px; border-radius:16px; background:#1B1714; color:#fff; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .cta.w { background:#fff; color:#000; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:5px; }
+  .tile { background:#FBF8F3; border:1px solid #E4DBCF; border-radius:12px; height:62px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:9px; font-weight:600; }
+  .tile.on { border:2px solid #1B1714; }
+  .tile img { height:38px; }
+  .chip { display:inline-block; font-size:9px; font-weight:600; padding:5px 9px; border-radius:12px; background:#FBF8F3; border:1px solid #E4DBCF; margin:0 3px 5px 0; }
+  .chip.on { background:#1B1714; color:#fff; }
+  .tag { display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:8px; margin-top:8px; }
+  .new { background:#F6D9DE; color:#6E1F2B; } .old { background:#e5e5e5; color:#555; }
+  .cap { text-align:center; font-size:12px; margin-top:6px; } .cap b{display:block;font-size:13px}
+  .chk { font-size:10px; margin:6px 0; display:flex; gap:6px; align-items:center; } .chk i{font-style:normal;width:14px;height:14px;border-radius:7px;background:#1B1714;color:#fff;font-size:8px;display:flex;align-items:center;justify-content:center}
+  .plan { border:1px solid #E4DBCF; background:#FBF8F3; border-radius:12px; padding:6px 9px; font-size:9px; margin-bottom:5px; display:flex; justify-content:space-between; }
+  .plan.on { border:2px solid #1B1714; }
+  .tl { font-size:8.5px; border-left:2px solid #1B1714; padding-left:8px; margin:6px 0 8px 4px; line-height:1.7; }
+</style>
+
+<div class="flow">
+
+  <div class="step" data-choice="1-welcome" onclick="toggleSelect(this)">
+    <div class="ph"><div class="nt"></div><div class="in">
+      <div style="position:relative;height:170px">
+        <img src="/files/jacketBurgundy.png" style="position:absolute;left:8px;top:14px;width:78px;transform:rotate(-9deg)">
+        <img src="/files/cardiganCherry.png" style="position:absolute;right:4px;top:6px;width:72px;transform:rotate(7deg)">
+        <img src="/files/dressDots.png" style="position:absolute;left:62px;top:56px;width:40px">
+        <img src="/files/bagDenim.png" style="position:absolute;left:0;top:110px;width:44px;transform:rotate(-12deg)">
+        <img src="/files/sneakersSamba.png" style="position:absolute;right:6px;top:104px;width:50px;transform:rotate(10deg)">
+      </div>
+      <div class="ser" style="font-size:22px">Your closet,<br>styled.</div>
+      <div class="soft" style="margin-top:6px">Snap what you already own…</div>
+    </div><div class="cta">Get started</div></div>
+    <div class="cap"><b>1 · Welcome</b>Button becomes "Get started"<br><span class="tag old">built</span></div>
+  </div>
+
+  <div class="step" data-choice="2-pain" onclick="toggleSelect(this)">
+    <div class="ph"><div class="nt"></div><div class="in">
+      <div class="bar"><i style="width:16%"></i></div>
+      <div class="ser" style="font-size:17px;margin-bottom:12px">How often do you have "nothing to wear"?</div>
+      <div class="opt">Every single morning</div><div class="opt on">A few times a week</div><div class="opt">Before anything special</div><div class="opt">Honestly, rarely</div>
+    </div><div class="cta">Continue</div></div>
+    <div class="cap"><b>2 · The problem</b>One tap, auto-advances<br><span class="tag new">new</span></div>
+  </div>
+
+  <div class="step" data-choice="3-insight" onclick="toggleSelect(this)">
+    <div class="ph"><div class="nt"></div><div class="in">
+      <div class="bar"><i style="width:30%"></i></div>
+      <div style="position:relative;height:150px">
+        <img src="/files/hoodieBrown.png" style="position:absolute;left:30px;top:6px;width:80px;transform:rotate(-6deg)">
+        <img src="/files/jeansLight.png" style="position:absolute;left:80px;top:40px;width:46px;transform:rotate(8deg)">
+        <img src="/files/skirtBrown.png" style="position:absolute;left:6px;top:86px;width:62px;transform:rotate(-10deg)">
+      </div>
+      <div class="ser" style="font-size:17px">It's not your closet.<br>It's the combos.</div>
+      <div class="soft" style="margin-top:6px;font-size:10px">Most of us reach for the same few pieces. We'll show you what else they go with.</div>
+    </div><div class="cta">Makes sense</div></div>
+    <div class="cap"><b>3 · Reassurance</b>No made-up stats<br><span class="tag new">new</span></div>
+  </div>
+
+  <div class="step" data-choice="4-vibe" onclick="toggleSelect(this)">
+    <div class="ph"><div class="nt"></div><div class="in">
+      <div class="bar"><i style="width:44%"></i></div>
+      <div class="ser" style="font-size:17px;margin-bottom:4px">Pick your vibe</div>
+      <div class="soft" style="margin-bottom:8px">Choose up to 3</div>
+      <div class="grid2">
+        <div class="tile on"><img src="/files/hoodieBrown.png">Cozy</div>
+        <div class="tile"><img src="/files/jacketBlack.png">Edgy</div>
+        <div class="tile on"><img src="/files/dressDots.png">Romantic</div>
+        <div class="tile"><img src="/files/sneakersSamba.png">Sporty</div>
+        <div class="tile"><img src="/files/skirtBrown.png">Preppy</div>
+        <div class="tile on"><img src="/files/shortsTan.png">Classic</div>
+      </div>
+    </div><div class="cta">Continue</div></div>
+    <div class="cap"><b>4 · Style vibe</b>Tiles use her own pieces<br><span class="tag new">new</span></div>
+  </div>
+
+  <div class="step" data-choice="5-occasion" onclick="toggleSelect(this)">
+    <div class="ph"><div class="nt"></div><div class="in">
+      <div class="bar"><i style="width:58%"></i></div>
+      <div class="ser" style="font-size:17px;margin-bottom:12px">Where are you getting dressed for?</div>
+      <span class="chip on">💼 Work</span><span class="chip">📚 Campus</span><span class="chip on">☕ Errands</span><span class="chip">🏠 WFH</span><span class="chip on">🍸 Nights out</span><span class="chip">✈️ Travel</span><span class="chip">💪 Gym</span>
+    </div><div class="cta">Continue</div></div>
+    <div class="cap"><b>5 · Occasions</b>Multi-select<br><span class="tag new">new</span></div>
+  </div>
+
+  <div class="step" data-choice="6-goal" onclick="toggleSelect(this)">
+    <div class="ph"><div class="nt"></div><div class="in">
+      <div class="bar"><i style="width:72%"></i></div>
+      <div class="ser" style="font-size:17px;margin-bottom:12px">What would make mornings better?</div>
+      <div class="opt on">Get ready in minutes</div><div class="opt">Wear more of what I own</div><div class="opt">Stop buying things I don't wear</div><div class="opt">Find my style</div>
+    </div><div class="cta">Continue</div></div>
+    <div class="cap"><b>6 · Goal</b>Echoed on the paywall<br><span class="tag new">new</span></div>
+  </div>
+
+  <div class="step" data-choice="7-name" onclick="toggleSelect(this)">
+    <div class="ph"><div class="nt"></div><div class="in">
+      <div class="bar"><i style="width:86%"></i></div>
+      <div class="ser" style="font-size:17px;margin-bottom:14px">Last thing: what should we call you?</div>
+      <div style="background:#FBF8F3;border:1px solid #E4DBCF;border-radius:12px;padding:10px;font-size:14px">Sara<span style="opacity:.4">|</span></div>
+      <div class="soft" style="margin-top:8px">Your closet will be "Sara's closet"</div>
+    </div><div class="cta">Scan my closet</div></div>
+    <div class="cap"><b>7 · Name</b>Personalises everything after<br><span class="tag new">new</span></div>
+  </div>
+
+  <div class="step" data-choice="8-scan" onclick="toggleSelect(this)">
+    <div class="ph dark"><div class="nt"></div><div class="in">
+      <div style="text-align:center;font-size:9px;font-weight:600;margin:4px 0 10px">Scan 1 of 3</div>
+      <div style="background:#222;border-radius:18px;height:200px;display:flex;align-items:center;justify-content:center"><img src="/files/cardiganCherry.png" style="width:120px;transform:rotate(-3deg)"></div>
+      <div class="ser" style="font-size:16px;margin-top:10px">Cherry cardigan</div>
+    </div><div class="cta w">Add to closet</div></div>
+    <div class="cap"><b>8 · Scan</b>As today<br><span class="tag old">built</span></div>
+  </div>
+
+  <div class="step" data-choice="9-building" onclick="toggleSelect(this)">
+    <div class="ph"><div class="nt"></div><div class="in">
+      <div style="height:110px;display:flex;align-items:center;justify-content:center"><div style="width:84px;height:84px;border-radius:42px;border:6px solid #E4DBCF;border-top-color:#1B1714;display:flex;align-items:center;justify-content:center" class="ser">72%</div></div>
+      <div class="ser" style="font-size:17px;text-align:center;margin-bottom:10px">Styling Sara's closet…</div>
+      <div class="chk"><i>✓</i>Reading colours &amp; fabrics</div>
+      <div class="chk"><i>✓</i>Matching your vibe: cozy, romantic</div>
+      <div class="chk" style="opacity:.45"><i style="background:#ccc">·</i>Planning for work &amp; nights out</div>
+    </div></div>
+    <div class="cap"><b>9 · Building</b>~5s, echoes her answers<br><span class="tag new">new</span></div>
+  </div>
+
+  <div class="step" data-choice="10-reveal" onclick="toggleSelect(this)">
+    <div class="ph"><div class="nt"></div><div class="in">
+      <div class="ser" style="font-size:17px;margin:4px 0 8px">Sara, your closet<br>makes 8 looks</div>
+      <div style="position:relative;height:200px">
+        <div style="position:absolute;left:30px;top:10px;width:110px;height:150px;border-radius:14px;background:#DCE2D3;filter:blur(3px);transform:rotate(6deg)"></div>
+        <div style="position:absolute;left:18px;top:4px;width:120px;height:160px;border-radius:14px;background:#EADFD0;box-shadow:0 6px 14px rgba(0,0,0,.12)">
+          <img src="/files/cardiganCherry.png" style="position:absolute;left:20px;top:8px;width:66px">
+          <img src="/files/jeansLight.png" style="position:absolute;left:34px;top:62px;width:38px">
+          <img src="/files/bagDenim.png" style="position:absolute;right:6px;top:52px;width:30px">
+          <img src="/files/sneakersSamba.png" style="position:absolute;right:6px;bottom:6px;width:30px">
+          <span class="hand" style="position:absolute;right:6px;top:4px;font-size:9px">coffee date</span>
+        </div>
+      </div>
+      <div class="soft" style="text-align:center">🔒 7 more looks ready</div>
+    </div><div class="cta">Unlock my looks</div></div>
+    <div class="cap"><b>10 · Reveal</b>One look free, rest behind the paywall<br><span class="tag new">new</span></div>
+  </div>
+
+  <div class="step" data-choice="11-paywall" onclick="toggleSelect(this)">
+    <div class="ph"><div class="nt"></div><div class="in">
+      <div style="text-align:right;font-size:10px;opacity:.35">✕</div>
+      <div class="ser" style="font-size:16px;margin:2px 0 6px">Get ready in minutes,<br>every morning</div>
+      <div style="font-size:9px;line-height:1.6">✓ New looks from your closet daily<br>✓ Unlimited scans<br>✓ Plan outfits for the week</div>
+      <div class="tl"><b>Today</b> · full access<br><b>Day 2</b> · we remind you<br><b>Day 3</b> · trial ends</div>
+      <div class="plan on"><span><b>Yearly</b> · 3 days free</span><span>$39.99</span></div>
+      <div class="plan"><span><b>Weekly</b></span><span>$5.99</span></div>
+      <div class="soft" style="text-align:center">Restore · Terms · Privacy</div>
+    </div><div class="cta">Start my free trial</div></div>
+    <div class="cap"><b>11 · Paywall</b>Trial timeline + 2 plans<br><span class="tag new">new</span></div>
+  </div>
+
+  <div class="step" data-choice="12-home" onclick="toggleSelect(this)">
+    <div class="ph"><div class="nt"></div><div class="in">
+      <div class="soft" style="letter-spacing:1px;font-weight:600">SATURDAY 7 NOVEMBER</div>
+      <div class="ser" style="font-size:20px">Morning, Sara</div>
+      <div style="margin-top:8px;height:200px;border-radius:16px;background:#EADFD0;position:relative">
+        <img src="/files/cardiganCherry.png" style="position:absolute;left:20px;top:10px;width:80px">
+        <img src="/files/jeansLight.png" style="position:absolute;left:40px;top:80px;width:46px">
+        <img src="/files/bagDenim.png" style="position:absolute;right:10px;top:70px;width:40px">
+      </div>
+    </div><div class="cta">Wear this</div></div>
+    <div class="cap"><b>12 · Home</b>Greets her by name<br><span class="tag old">built</span></div>
+  </div>
+
+</div>

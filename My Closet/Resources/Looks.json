@@ -1,0 +1,77 @@
+{
+  "canvasAspect": 0.78,
+  "looks": [
+    {
+      "id": "coffee", "caption": "coffee date ☕", "floor": "EADFD0", "mirror": false, "captionX": 0.8, "captionY": 0.09, "captionRot": 6,
+      "pieces": [
+        {"item": "jeansLight", "cx": 0.4, "cy": 0.62, "w": 0.4, "rot": -4},
+        {"item": "cardiganCherry", "cx": 0.42, "cy": 0.3, "w": 0.56, "rot": 3},
+        {"item": "bagDenim", "cx": 0.8, "cy": 0.44, "w": 0.3, "rot": 8},
+        {"item": "sneakersSamba", "cx": 0.78, "cy": 0.81, "w": 0.3, "rot": -6}
+      ]
+    },
+    {
+      "id": "offduty", "caption": "off-duty", "floor": "DCE2D3", "mirror": false, "captionX": 0.8, "captionY": 0.08, "captionRot": 5,
+      "pieces": [
+        {"item": "jeansDark", "cx": 0.44, "cy": 0.73, "w": 0.5, "rot": 0},
+        {"item": "hoodieBrown", "cx": 0.4, "cy": 0.29, "w": 0.52, "rot": -3},
+        {"item": "bagHobo", "cx": 0.82, "cy": 0.4, "w": 0.3, "rot": 6},
+        {"item": "sneakers530", "cx": 0.8, "cy": 0.86, "w": 0.34, "rot": 8}
+      ]
+    },
+    {
+      "id": "gallery", "caption": "gallery afternoon", "floor": "F0DEDA", "mirror": true, "captionX": 0.26, "captionY": 0.08, "captionRot": -4,
+      "pieces": [
+        {"item": "dressDots", "cx": 0.36, "cy": 0.53, "w": 0.34, "rot": -2},
+        {"item": "jacketBlack", "cx": 0.72, "cy": 0.3, "w": 0.46, "rot": 7},
+        {"item": "bagShoulder", "cx": 0.76, "cy": 0.61, "w": 0.26, "rot": -5},
+        {"item": "sneakersSamba", "cx": 0.74, "cy": 0.85, "w": 0.28, "rot": 4}
+      ]
+    },
+    {
+      "id": "datenight", "caption": "date night 🍷", "floor": "F2E8CF", "mirror": false, "captionX": 0.78, "captionY": 0.1, "captionRot": 5,
+      "pieces": [
+        {"item": "skirtBrown", "cx": 0.42, "cy": 0.58, "w": 0.46, "rot": 2},
+        {"item": "jacketBurgundy", "cx": 0.42, "cy": 0.28, "w": 0.6, "rot": -4},
+        {"item": "bagShoulder", "cx": 0.82, "cy": 0.58, "w": 0.28, "rot": 10},
+        {"item": "sneakers530", "cx": 0.44, "cy": 0.87, "w": 0.36, "rot": -3}
+      ]
+    },
+    {
+      "id": "market", "caption": "farmers market", "floor": "DCE4EC", "mirror": true, "captionX": 0.26, "captionY": 0.07, "captionRot": -5,
+      "pieces": [
+        {"item": "shortsTan", "cx": 0.4, "cy": 0.62, "w": 0.42, "rot": 3},
+        {"item": "cardiganCherry", "cx": 0.38, "cy": 0.28, "w": 0.54, "rot": -5},
+        {"item": "bagDenim", "cx": 0.8, "cy": 0.48, "w": 0.3, "rot": -8},
+        {"item": "sneakers530", "cx": 0.74, "cy": 0.85, "w": 0.36, "rot": 6}
+      ]
+    },
+    {
+      "id": "late", "caption": "running late", "floor": "EADFD0", "mirror": false, "captionX": 0.8, "captionY": 0.08, "captionRot": 4,
+      "pieces": [
+        {"item": "hoodieGreen", "cx": 0.4, "cy": 0.32, "w": 0.56, "rot": 2},
+        {"item": "jeansLight", "cx": 0.44, "cy": 0.7, "w": 0.4, "rot": -3},
+        {"item": "bagHobo", "cx": 0.76, "cy": 0.4, "w": 0.3, "rot": 6},
+        {"item": "sneakersSamba", "cx": 0.8, "cy": 0.85, "w": 0.28, "rot": 8}
+      ]
+    },
+    {
+      "id": "golden", "caption": "golden hour", "floor": "F0DEDA", "mirror": true, "captionX": 0.26, "captionY": 0.07, "captionRot": -4,
+      "pieces": [
+        {"item": "shortsTan", "cx": 0.42, "cy": 0.62, "w": 0.4, "rot": -2},
+        {"item": "jacketBlack", "cx": 0.4, "cy": 0.28, "w": 0.54, "rot": 4},
+        {"item": "bagHobo", "cx": 0.8, "cy": 0.52, "w": 0.28, "rot": -6},
+        {"item": "sneakersSamba", "cx": 0.44, "cy": 0.87, "w": 0.28, "rot": 3}
+      ]
+    },
+    {
+      "id": "brunch", "caption": "brunch w/ the girls", "floor": "DCE2D3", "mirror": false, "captionX": 0.27, "captionY": 0.06, "captionRot": -4,
+      "pieces": [
+        {"item": "jeansLight", "cx": 0.42, "cy": 0.66, "w": 0.38, "rot": -2},
+        {"item": "jacketBurgundy", "cx": 0.46, "cy": 0.28, "w": 0.54, "rot": 3},
+        {"item": "bagDenim", "cx": 0.8, "cy": 0.56, "w": 0.28, "rot": 6},
+        {"item": "sneakersSamba", "cx": 0.78, "cy": 0.86, "w": 0.28, "rot": -4}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+<h2>More motion, and a louder paywall</h2>
+<p class="subtitle">These two phones are live: tap the vibe tiles, and press the paywall button. Rough prototype in a browser, the app version will be smoother.</p>
+
+<style>
+  .duo { display:flex; flex-wrap:wrap; gap:36px; justify-content:center; margin-top:14px; }
+  .ph2 { width:300px; height:620px; border-radius:46px; background:#F3EDE4; border:10px solid #111; position:relative; overflow:hidden; font-family:-apple-system,system-ui,sans-serif; color:#1B1714; }
+  .nt2 { width:96px; height:26px; background:#111; border-radius:14px; margin:8px auto 0; position:relative; z-index:5; }
+  .ser { font-family:"New York","Iowan Old Style",Georgia,serif; font-weight:700; letter-spacing:-.4px; line-height:1.06; }
+  .hand { font-family:"Bradley Hand","Marker Felt",cursive; font-weight:700; }
+  .lbl { text-align:center; margin-top:10px; font-size:14px; } .lbl b{display:block;font-size:15px;margin-bottom:2px}
+
+  /* ---------- vibe phone ---------- */
+  .pile { position:relative; height:120px; margin:4px 16px 0; }
+  .pile img { position:absolute; max-width:80px; max-height:96px; filter:drop-shadow(0 6px 8px rgba(0,0,0,.18)); animation:drop .55s cubic-bezier(.2,1.4,.4,1) both; }
+  @keyframes drop { from { transform:translateY(-60px) rotate(var(--r0)) scale(1.3); opacity:0 } to { transform:translateY(0) rotate(var(--r)) scale(1); opacity:1 } }
+  .vq { padding:0 18px; }
+  .tiles { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:12px 18px 0; }
+  .tl2 { position:relative; height:118px; border-radius:20px; overflow:hidden; background:#FBF8F3; border:1.5px solid #E4DBCF; cursor:pointer; transition:border-color .3s, transform .15s; }
+  .tl2:active { transform:scale(.97); }
+  .tl2 .photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:opacity .45s ease .25s, filter .45s; }
+  .tl2 .sweep { position:absolute; left:0; right:0; height:26px; top:-30px; background:linear-gradient(transparent,rgba(255,255,255,.95),transparent); mix-blend-mode:screen; opacity:0; }
+  .tl2 .stk { position:absolute; left:50%; top:46%; width:72%; max-height:78%; object-fit:contain; transform:translate(-50%,-50%) scale(.7) rotate(-14deg); opacity:0; transition:transform .55s cubic-bezier(.2,1.5,.4,1) .4s, opacity .25s .4s; filter:drop-shadow(0 6px 8px rgba(0,0,0,.2)); }
+  .tl2 .nm { position:absolute; left:10px; bottom:7px; font-size:12px; font-weight:700; color:#fff; text-shadow:0 1px 4px rgba(0,0,0,.6); transition:color .3s .4s, text-shadow .3s .4s; }
+  .tl2.on { border-color:#1B1714; border-width:2.5px; }
+  .tl2.on .photo { opacity:0; filter:brightness(.4); }
+  .tl2.on .sweep { animation:sw .55s ease-in-out; }
+  @keyframes sw { 0% { top:-30px; opacity:1 } 100% { top:120px; opacity:1 } }
+  .tl2.on .stk { opacity:1; transform:translate(-50%,-50%) scale(1) rotate(-4deg); }
+  .tl2.on .nm { color:#1B1714; text-shadow:none; }
+  .vcta { position:absolute; left:18px; right:18px; bottom:22px; height:52px; border-radius:26px; background:#1B1714; color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:15px; }
+
+  /* ---------- paywall phone ---------- */
+  .wall { position:relative; height:198px; margin-top:-34px; overflow:hidden; }
+  .row { display:flex; gap:10px; position:absolute; left:0; width:max-content; }
+  .row.r1 { top:40px; animation:mq 22s linear infinite; }
+  .row.r2 { top:126px; animation:mq 26s linear infinite reverse; }
+  @keyframes mq { from { transform:translateX(0) } to { transform:translateX(-50%) } }
+  .lk { width:78px; height:92px; border-radius:16px; position:relative; box-shadow:0 6px 14px rgba(0,0,0,.10); flex:none; }
+  .lk img { position:absolute; filter:drop-shadow(0 3px 4px rgba(0,0,0,.18)); }
+  .fade { position:absolute; inset:0; background:linear-gradient(#F3EDE400 70%, #F3EDE4 100%); pointer-events:none; }
+  .tape { position:absolute; left:50%; top:170px; transform:translateX(-50%) rotate(-4deg); background:#efe6c8e6; padding:6px 18px; font-size:20px; box-shadow:0 2px 6px rgba(0,0,0,.08); z-index:3; white-space:nowrap; }
+  .tape:before,.tape:after{content:"";position:absolute;top:0;bottom:0;width:8px;background:repeating-linear-gradient(90deg,transparent 0 2px,#F3EDE4 2px 4px)} .tape:before{left:-4px} .tape:after{right:-4px}
+  .pw { padding:16px 20px 0; }
+  .x { position:absolute; top:44px; right:16px; width:28px; height:28px; border-radius:14px; background:rgba(0,0,0,.06); display:flex; align-items:center; justify-content:center; font-size:13px; opacity:0; animation:fin .4s ease 3s forwards; z-index:6; }
+  @keyframes fin { to { opacity:.7 } }
+  .ttl { font-size:24px; text-align:center; margin-top:8px; }
+  .ttl em { color:#6E1F2B; font-style:italic; }
+  .tml { display:flex; justify-content:space-between; margin:12px 4px 12px; position:relative; }
+  .tml:before { content:""; position:absolute; left:16px; right:16px; top:14px; height:3px; background:#E4DBCF; border-radius:2px; }
+  .tml:after { content:""; position:absolute; left:16px; top:14px; height:3px; background:#6E1F2B; border-radius:2px; width:0; animation:fill 1.6s cubic-bezier(.23,1,.32,1) .6s forwards; }
+  @keyframes fill { to { width:calc(50% - 16px) } }
+  .tm { position:relative; z-index:1; text-align:center; width:82px; font-size:10.5px; line-height:1.3; color:#7A6F66; }
+  .tm i { display:flex; width:30px; height:30px; border-radius:15px; margin:0 auto 5px; align-items:center; justify-content:center; background:#FBF8F3; border:2px solid #E4DBCF; font-style:normal; font-size:13px; }
+  .tm.on i { background:#6E1F2B; border-color:#6E1F2B; color:#fff; }
+  .tm b { color:#1B1714; display:block; }
+  .plan2 { position:relative; display:flex; justify-content:space-between; align-items:center; border-radius:18px; padding:9px 14px; margin-bottom:8px; border:2px solid #E4DBCF; background:#FBF8F3; cursor:pointer; transition:border-color .2s, transform .2s; font-size:13px; }
+  .plan2.on { border-color:#1B1714; transform:scale(1.02); }
+  .plan2 small { display:block; color:#7A6F66; font-size:11px; margin-top:2px; }
+  .badge { position:absolute; right:12px; top:-12px; background:#6E1F2B; color:#fff; font-size:10px; font-weight:800; letter-spacing:.6px; padding:4px 9px; border-radius:8px; transform:rotate(5deg); box-shadow:0 0 0 3px #fff, 0 4px 8px rgba(0,0,0,.18); }
+  .pcta { position:absolute; left:20px; right:20px; bottom:36px; height:52px; border-radius:28px; background:#1B1714; color:#fff; font-weight:700; font-size:16px; display:flex; align-items:center; justify-content:center; overflow:hidden; cursor:pointer; animation:breathe 2.4s ease-in-out infinite; }
+  .pcta:after { content:""; position:absolute; top:0; bottom:0; width:60px; left:-80px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent); transform:skewX(-20deg); animation:shine 2.8s ease-in-out infinite 1s; }
+  @keyframes shine { 0% { left:-80px } 45%,100% { left:340px } }
+  @keyframes breathe { 0%,100% { transform:scale(1) } 50% { transform:scale(1.025) } }
+  .fine { position:absolute; left:0; right:0; bottom:14px; text-align:center; font-size:10px; color:#7A6F66; }
+  .burst { position:absolute; width:60px; pointer-events:none; z-index:10; filter:drop-shadow(0 6px 8px rgba(0,0,0,.2)); }
+  .welcome { position:absolute; inset:0; background:#F3EDE4; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .4s .9s; z-index:9; }
+  .welcome.on { opacity:1; pointer-events:auto; }
+</style>
+
+<div class="duo">
+  <!-- VIBE -->
+  <div>
+    <div class="ph2"><div class="nt2"></div>
+      <div class="pile" id="pile"></div>
+      <div class="vq">
+        <div style="height:3px;background:#E4DBCF;border-radius:2px;margin-bottom:12px"><div style="width:44%;height:3px;background:#1B1714;border-radius:2px"></div></div>
+        <div class="ser" style="font-size:26px">Pick your vibe</div>
+        <div style="font-size:13px;color:#7A6F66;margin-top:4px">Tap up to 3. Watch them come off the photo.</div>
+      </div>
+      <div class="tiles">
+        <div class="tl2" onclick="vibe(this,'hoodieBrown')"><img class="photo" src="/files/hoodieBrown_photo.jpg"><div class="sweep"></div><img class="stk" src="/files/hoodieBrown.png"><span class="nm">Cozy</span></div>
+        <div class="tl2" onclick="vibe(this,'jacketBlack')"><img class="photo" src="/files/jacketBlack_photo.jpg"><div class="sweep"></div><img class="stk" src="/files/jacketBlack.png"><span class="nm">Edgy</span></div>
+        <div class="tl2" onclick="vibe(this,'dressDots')"><img class="photo" src="/files/dressDots_photo.jpg"><div class="sweep"></div><img class="stk" src="/files/dressDots.png"><span class="nm">Romantic</span></div>
+        <div class="tl2" onclick="vibe(this,'sneakersSamba')"><img class="photo" src="/files/sneakersSamba_photo.jpg"><div class="sweep"></div><img class="stk" src="/files/sneakersSamba.png"><span class="nm">Sporty</span></div>
+        <div class="tl2" onclick="vibe(this,'skirtBrown')"><img class="photo" src="/files/skirtBrown_photo.jpg"><div class="sweep"></div><img class="stk" src="/files/skirtBrown.png"><span class="nm">Preppy</span></div>
+        <div class="tl2" onclick="vibe(this,'shortsTan')"><img class="photo" src="/files/shortsTan_photo.jpg"><div class="sweep"></div><img class="stk" src="/files/shortsTan.png"><span class="nm">Classic</span></div>
+      </div>
+      <div class="vcta">Continue</div>
+    </div>
+    <div class="lbl"><b>Answers peel off as stickers</b>Each pick lifts off its photo and drops onto a pile that follows her through every question</div>
+  </div>
+
+  <!-- PAYWALL -->
+  <div>
+    <div class="ph2" id="pw"><div class="nt2"></div>
+      <div class="x">✕</div>
+      <div class="wall">
+        <div class="row r1" id="r1"></div>
+        <div class="row r2" id="r2"></div>
+        <div class="fade"></div>
+      </div>
+      <div class="tape hand">Sara's closet ♡</div>
+      <div class="pw">
+        <div class="ser ttl">Get dressed in<br><em>minutes</em>, every morning</div>
+        <div class="tml">
+          <div class="tm on"><i>🔓</i><b>Today</b>All 8 looks</div>
+          <div class="tm on"><i>🔔</i><b>Day 2</b>We remind you</div>
+          <div class="tm"><i>★</i><b>Day 3</b>Trial ends</div>
+        </div>
+        <div class="plan2 on" onclick="plan(this)"><div><b>Yearly</b><small>3 days free, then $39.99/yr</small></div><b>$0.77/wk</b><span class="badge">BEST VALUE</span></div>
+        <div class="plan2" onclick="plan(this)"><div><b>Weekly</b><small>Cancel anytime</small></div><b>$5.99/wk</b></div>
+      </div>
+      <div class="pcta" onclick="buy(event)">Start my free trial</div>
+      <div class="fine">No payment now · Restore · Terms · Privacy</div>
+      <div class="welcome" id="wel"><div class="ser" style="font-size:30px">Welcome in, Sara</div><div style="color:#7A6F66;margin-top:6px;font-size:14px">Your first look is ready</div></div>
+    </div>
+    <div class="lbl"><b>Paywall: her looks on a moving wall</b>Two rows of her outfits drift past, a handwritten tape label, an animated trial timeline, a shining button, and a sticker burst on purchase</div>
+  </div>
+</div>
+
+<script>
+  const looks = [
+    ['#EADFD0',[['cardiganCherry',8,6,46],['jeansLight',22,40,26],['sneakersSamba',46,58,26]]],
+    ['#DCE2D3',[['hoodieBrown',6,6,44],['jeansDark',20,42,40],['sneakers530',44,64,30]]],
+    ['#F0DEDA',[['dressDots',8,4,26],['jacketBlack',34,6,40],['bagShoulder',40,52,28]]],
+    ['#F2E8CF',[['jacketBurgundy',6,6,52],['skirtBrown',14,46,40],['bagShoulder',50,56,24]]],
+    ['#DCE4EC',[['cardiganCherry',6,4,44],['shortsTan',16,44,34],['bagDenim',48,46,26]]],
+    ['#EADFD0',[['hoodieGreen',6,6,46],['jeansLight',30,40,26],['bagHobo',50,30,24]]],
+  ];
+  function card([bg, pieces]) {
+    return `<div class="lk" style="background:${bg}">` + pieces.map(([id,x,y,w]) =>
+      `<img src="/files/${id}.png" style="left:${x}px;top:${y}px;width:${w}px">`).join('') + `</div>`;
+  }
+  const html = looks.map(card).join('');
+  const r1 = document.getElementById('r1'), r2 = document.getElementById('r2');
+  r1.innerHTML = html + html;
+  r2.innerHTML = [...looks].reverse().map(card).join('').repeat(2);
+  r1.querySelectorAll('.lk').forEach((c,i)=>c.style.transform=`rotate(${i%2?3:-3}deg)`);
+  r2.querySelectorAll('.lk').forEach((c,i)=>c.style.transform=`rotate(${i%2?-2:4}deg)`);
+
+  const spots = [[10,10,-8],[96,0,6],[178,14,-4],[52,34,10],[140,40,-10],[210,30,7]];
+  function vibe(el, id) {
+    const pile = document.getElementById('pile');
+    if (el.classList.contains('on')) {
+      el.classList.remove('on');
+      pile.querySelector(`[data-id="${id}"]`)?.remove();
+      return;
+    }
+    if (document.querySelectorAll('.tl2.on').length >= 3) return;
+    el.classList.add('on');
+    const s = spots[pile.children.length % spots.length];
+    const img = Object.assign(document.createElement('img'), { src:`/files/${id}.png` });
+    img.dataset.id = id;
+    img.style.left = s[0]+'px'; img.style.top = s[1]+'px';
+    img.style.setProperty('--r', s[2]+'deg'); img.style.setProperty('--r0', (s[2]*3)+'deg');
+    img.style.animationDelay = '.75s';
+    setTimeout(()=>pile.appendChild(img), 0);
+  }
+  function plan(el) { document.querySelectorAll('.plan2').forEach(p=>p.classList.remove('on')); el.classList.add('on'); }
+  function buy(e) {
+    const pw = document.getElementById('pw'), r = pw.getBoundingClientRect();
+    const ids = ['cardiganCherry','sneakersSamba','bagDenim','dressDots','jacketBurgundy','jeansLight','hoodieBrown','skirtBrown','bagHobo','shortsTan'];
+    ids.forEach((id,i) => {
+      const img = Object.assign(document.createElement('img'), { src:`/files/${id}.png`, className:'burst' });
+      img.style.left = '120px'; img.style.top = '520px';
+      pw.appendChild(img);
+      const a = (i/ids.length)*Math.PI*2, d = 150 + Math.random()*90;
+      img.animate([
+        { transform:'translate(0,0) scale(.3) rotate(0deg)', opacity:1 },
+        { transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d-160}px) scale(1.1) rotate(${(Math.random()-.5)*80}deg)`, opacity:1, offset:.6 },
+        { transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d+40}px) scale(1) rotate(${(Math.random()-.5)*120}deg)`, opacity:0 }
+      ], { duration:1400, easing:'cubic-bezier(.2,.9,.3,1)', fill:'forwards' });
+      setTimeout(()=>img.remove(), 1500);
+    });
+    document.getElementById('wel').classList.add('on');
+    setTimeout(()=>document.getElementById('wel').classList.remove('on'), 3200);
+  }
+</script>
