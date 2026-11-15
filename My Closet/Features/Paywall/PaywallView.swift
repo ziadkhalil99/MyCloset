@@ -217,12 +217,18 @@ private struct LookWall: View {
     let looks: [Look]
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    /// At least 5 cards per row, repeating her looks when she only has a few.
+    private var filled: [Look] {
+        guard !looks.isEmpty, looks.count < 5 else { return looks }
+        return (0..<5).map { looks[$0 % looks.count] }
+    }
+
     var body: some View {
         TimelineView(.animation(paused: reduceMotion)) { context in
             let t = context.date.timeIntervalSinceReferenceDate
             VStack(spacing: 10) {
-                row(looks, t: t, speed: 22, leftward: true)
-                row(looks.reversed(), t: t, speed: 18, leftward: false)
+                row(filled, t: t, speed: 22, leftward: true)
+                row(filled.reversed(), t: t, speed: 18, leftward: false)
             }
             .padding(.top, 34)
         }

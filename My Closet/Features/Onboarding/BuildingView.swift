@@ -35,7 +35,7 @@ struct BuildingView: View {
                 Text("\(count)")
                     .font(.display(56))
                     .contentTransition(.numericText(value: Double(count)))
-                Text("of \(store.lookBook.looks.count) looks")
+                Text(store.lookBook.looks.count == 1 ? "of 1 look" : "of \(store.lookBook.looks.count) looks")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(Theme.inkSoft)
             }
@@ -107,7 +107,7 @@ private struct AssemblingCard: View {
                     let isIn = index < landed
                     let cx = look.mirror ? 1 - piece.cx : piece.cx
                     let rot = look.mirror ? -piece.rot : piece.rot
-                    Image(piece.item)
+                    ClosetItem.cutoutImage(id: piece.item)
                         .resizable()
                         .scaledToFit()
                         .frame(width: piece.w * size.width)

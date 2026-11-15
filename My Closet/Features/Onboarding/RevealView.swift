@@ -14,8 +14,9 @@ struct RevealView: View {
     var body: some View {
         let looks = store.lookBook.looks
         let name = store.profile.trimmedName
+        let lookCount = looks.count == 1 ? "1 look" : "\(looks.count) looks"
         VStack(spacing: 0) {
-            Text(name.isEmpty ? "Your closet\nmakes \(looks.count) looks" : "\(name), your closet\nmakes \(looks.count) looks")
+            Text(name.isEmpty ? "Your closet\nmakes \(lookCount)" : "\(name), your closet\nmakes \(lookCount)")
                 .font(.display(34))
                 .foregroundStyle(Theme.ink)
                 .multilineTextAlignment(.center)
@@ -40,7 +41,8 @@ struct RevealView: View {
             }
             .frame(maxHeight: .infinity)
 
-            Label("\(max(looks.count - 1, 0)) more looks are ready", systemImage: "lock.fill")
+            Label(looks.count > 2 ? "\(looks.count - 1) more looks are ready" : (looks.count == 2 ? "1 more look is ready" : "More looks come with every scan"),
+                  systemImage: "lock.fill")
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(Theme.inkSoft)
                 .opacity(showFooter ? 1 : 0)

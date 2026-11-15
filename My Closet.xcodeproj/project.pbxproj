@@ -35,8 +35,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5C10A0012F00000100AC0001 /* ClosetShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClosetShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		42EA4CD6309F4FEC00AC229C /* My Closet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Closet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C10A0012F00000100AC0001 /* ClosetShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClosetShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,12 +50,9 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5C10A0042F00000100AC0001 /* ClosetShare */ = {
+		42EA4CD8309F4FEC00AC229C /* My Closet */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				5C10A0052F00000100AC0001 /* Exceptions for "ClosetShare" folder in "ClosetShare" target */,
-			);
-			path = ClosetShare;
+			path = "My Closet";
 			sourceTree = "<group>";
 		};
 		5C10A0032F00000100AC0001 /* Shared */ = {
@@ -63,9 +60,12 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		42EA4CD8309F4FEC00AC229C /* My Closet */ = {
+		5C10A0042F00000100AC0001 /* ClosetShare */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "My Closet";
+			exceptions = (
+				5C10A0052F00000100AC0001 /* Exceptions for "ClosetShare" folder in "ClosetShare" target */,
+			);
+			path = ClosetShare;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -148,8 +148,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				5C10A0042F00000100AC0001 /* ClosetShare */,
 				5C10A0032F00000100AC0001 /* Shared */,
+				5C10A0042F00000100AC0001 /* ClosetShare */,
 			);
 			name = ClosetShare;
 			packageProductDependencies = (
@@ -369,6 +369,9 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ClosetAi;
+				INFOPLIST_KEY_NSCameraUsageDescription = "ClosetAi uses the camera to scan your clothes and lift each piece off the background.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "ClosetAi looks through your photos on this iPhone to find the outfits you wear. Your photos are never uploaded; only the pieces it cuts out are sent to create studio photos of them.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -415,6 +418,9 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ClosetAi;
+				INFOPLIST_KEY_NSCameraUsageDescription = "ClosetAi uses the camera to scan your clothes and lift each piece off the background.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "ClosetAi looks through your photos on this iPhone to find the outfits you wear. Your photos are never uploaded; only the pieces it cuts out are sent to create studio photos of them.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -456,7 +462,7 @@
 				DEVELOPMENT_TEAM = 3ASZ6DB46N;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClosetShare/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "My Closet";
+				INFOPLIST_KEY_CFBundleDisplayName = ClosetAi;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -489,7 +495,7 @@
 				DEVELOPMENT_TEAM = 3ASZ6DB46N;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClosetShare/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "My Closet";
+				INFOPLIST_KEY_CFBundleDisplayName = ClosetAi;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (

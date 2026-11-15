@@ -1,10 +1,10 @@
 import Foundation
 
-/// A hand-arranged flat-lay outfit. Placement is authored in Resources/Looks.json:
-/// `cx`/`cy` are the piece centre as fractions of the canvas, `w` its width as a fraction
-/// of canvas width, `rot` degrees clockwise. Pieces draw in array order (first = bottom).
-struct Look: Identifiable, Decodable, Hashable {
-    struct Piece: Decodable, Hashable {
+/// A flat-lay outfit. `cx`/`cy` are the piece centre as fractions of the canvas, `w` its width
+/// as a fraction of canvas width, `rot` degrees clockwise. Pieces draw in array order
+/// (first = bottom). Looks are built from the person's own pieces by `LookStylist`.
+struct Look: Identifiable, Hashable {
+    struct Piece: Hashable {
         let item: String
         let cx: Double
         let cy: Double
@@ -20,22 +20,9 @@ struct Look: Identifiable, Decodable, Hashable {
     let captionY: Double
     let captionRot: Double
     let pieces: [Piece]
-
-    var items: [ClosetItem] { pieces.compactMap { ClosetItem.item(id: $0.item) } }
 }
 
-struct LookBook: Decodable {
+struct LookBook {
     let canvasAspect: Double
     let looks: [Look]
-
-    static let bundled: LookBook = {
-        guard let url = Bundle.main.url(forResource: "Looks", withExtension: "json"),
-              let data = try? Data(contentsOf: url),
-              let book = try? JSONDecoder().decode(LookBook.self, from: data)
-        else {
-            assertionFailure("Looks.json missing or malformed")
-            return LookBook(canvasAspect: 0.78, looks: [])
-        }
-        return book
-    }()
 }

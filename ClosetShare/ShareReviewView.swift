@@ -15,7 +15,7 @@ struct ShareReviewView: View {
                 review
             case .saved:
                 message(icon: "checkmark", title: model.isWishlist ? "Added to your wishlist" : "Added to your closet",
-                        body: "Open My Closet to style it into looks.", showClose: false)
+                        body: "Open ClosetAi to style it into looks.", showClose: false)
             case .empty:
                 message(icon: "eye.slash", title: "No clothes found",
                         body: "Try a screenshot where the piece is large and clearly visible.", showClose: true,
@@ -41,7 +41,7 @@ struct ShareReviewView: View {
             }
             .accessibilityLabel("Cancel")
             Spacer()
-            Text("My Closet")
+            Text("ClosetAi")
                 .font(.display(20))
                 .foregroundStyle(Theme.ink)
             Spacer()

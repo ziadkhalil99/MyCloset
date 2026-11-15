@@ -89,21 +89,40 @@ extension ClosetItem {
     static var scanDemo: [ClosetItem] { ["cardiganCherry", "jeansDark", "sneakersSamba"].compactMap { item(id: $0) } }
 
     static func item(id: String) -> ClosetItem? { all.first { $0.id == id } }
+
+    /// The cutout for any piece id: a bundled asset, or a saved piece's PNG in the App Group.
+    static func cutoutImage(id: String) -> Image {
+        item(id: id) != nil ? Image(id) : SavedImageCache.image(at: PieceLibrary.cutoutURL(for: id))
+    }
 }
 
 extension ClosetItem {
     init(saved piece: SavedPiece) {
         self.init(id: piece.id, name: piece.name,
                   category: ClosetCategory(rawValue: piece.category) ?? .tops,
-                  material: "From a screenshot", color: piece.color,
+                  material: Self.origin(of: piece), color: piece.color,
                   photoAspect: piece.cutoutAspect, cutoutRect: CGRect(x: 0, y: 0, width: 1, height: 1),
                   isSaved: true, isWishlist: piece.isWishlist)
+    }
+
+    private static func origin(of piece: SavedPiece) -> String {
+        switch piece.source {
+        case "camera": "Scanned"
+        case "photos": "From your photos"
+        case "catalog": "Basics"
+        default: "From a screenshot"
+        }
     }
 }
 
 /// Decoded saved-piece images, so grid tiles don't re-read PNGs on every render.
 enum SavedImageCache {
     private static let cache = NSCache<NSURL, UIImage>()
+
+    /// Drops a cached image whose file was replaced (a studio photo arrived).
+    static func forget(_ url: URL?) {
+        if let url { cache.removeObject(forKey: url as NSURL) }
+    }
 
     static func image(at url: URL?) -> Image {
         guard let url else { return Image(uiImage: UIImage()) }

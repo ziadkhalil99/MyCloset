@@ -3,7 +3,7 @@ import Vision
 import CoreImage
 
 /// A piece found in a screenshot, ready to review before it's saved.
-struct DetectedPiece: Identifiable, Sendable {
+nonisolated struct DetectedPiece: Identifiable, Sendable {
     let id = UUID()
     let cutout: UIImage
     let sticker: UIImage
@@ -19,6 +19,7 @@ struct DetectedPiece: Identifiable, Sendable {
 
 /// On-device analysis: Vision lifts each foreground subject off the screenshot, the image
 /// classifier names and categorises it, and the cutout's average colour gives it a colour name.
+/// Photos the person took themselves can also get a studio polish.
 /// Nothing leaves the phone.
 nonisolated enum ClothingAnalyzer {
     static let categories = ["tops", "outerwear", "bottoms", "dresses", "shoes", "bags"]
@@ -35,17 +36,23 @@ nonisolated enum ClothingAnalyzer {
         /// Everything else that was lifted (or the salient crop when lifting failed), offered only
         /// if the person explicitly asks to add the image anyway.
         let other: [DetectedPiece]
+        /// False when no subject could be lifted and the pieces are just the salient crop.
+        var lifted = true
     }
 
+    /// - Parameter polish: Evens out crease shading and lighting on the cutouts. Meant for the
+    ///   person's own photos; screenshots of product shots are already clean.
     @concurrent
-    static func analyze(_ source: UIImage) async -> Result {
+    static func analyze(_ source: UIImage, polish: Bool = false) async -> Result {
         guard let image = normalized(source) else { return Result(clothing: [], other: []) }
         var subjects = liftSubjects(from: image)
+        let lifted = !subjects.isEmpty
         if subjects.isEmpty, let crop = salientCrop(of: image) { subjects = [crop] }
 
-        let pieces = subjects.prefix(maxPieces + 2).compactMap(describe)
+        let pieces = subjects.prefix(maxPieces + 2).compactMap { describe($0, polish: polish) }
         return Result(clothing: Array(pieces.filter(\.looksLikeClothing).prefix(maxPieces)),
-                      other: Array(pieces.filter { !$0.looksLikeClothing }.prefix(maxPieces)))
+                      other: Array(pieces.filter { !$0.looksLikeClothing }.prefix(maxPieces)),
+                      lifted: lifted)
     }
 
     // MARK: - Lifting
@@ -86,10 +93,12 @@ nonisolated enum ClothingAnalyzer {
 
     // MARK: - Describing
 
-    private static func describe(_ subject: CGImage) -> DetectedPiece? {
-        let cutout = downscaled(subject, maxSide: 1000)
-        let match = classify(cutout)
-        let color = colorName(of: cutout)
+    private static func describe(_ subject: CGImage, polish: Bool) -> DetectedPiece? {
+        let raw = downscaled(subject, maxSide: 1000)
+        // Classification and colour read the untouched pixels; only what's shown is polished.
+        let match = classify(raw)
+        let color = colorName(of: raw)
+        let cutout = polish ? (studioPolish(raw) ?? raw) : raw
         guard let sticker = makeSticker(from: cutout) else { return nil }
         let noun = match?.noun ?? "Piece"
         return DetectedPiece(
@@ -100,6 +109,26 @@ nonisolated enum ClothingAnalyzer {
             color: color,
             looksLikeClothing: match != nil
         )
+    }
+
+    /// Names, colours and stickers a garment that `OutfitParser` already cut off a person. The
+    /// parser knows the broad category; the classifier only refines it (a jacket on top is
+    /// outerwear) and gives it a better noun.
+    static func describeGarment(_ cutout: CGImage, category: String, noun: String, polish: Bool) -> DetectedPiece? {
+        let raw = downscaled(cutout, maxSide: 900)
+        var category = category, noun = noun
+        if let match = classify(raw),
+           match.category == category || (category == "tops" && match.category == "outerwear"),
+           match.noun != "Piece" {
+            category = match.category
+            noun = match.noun
+        }
+        let color = colorName(of: raw)
+        let shown = polish ? (studioPolish(raw) ?? raw) : raw
+        guard let sticker = makeSticker(from: shown) else { return nil }
+        return DetectedPiece(cutout: UIImage(cgImage: shown), sticker: UIImage(cgImage: sticker),
+                             name: "\(color) \(noun.lowercased())", category: category, color: color,
+                             looksLikeClothing: true)
     }
 
     private struct Match { let category: String; let noun: String }
@@ -126,6 +155,7 @@ nonisolated enum ClothingAnalyzer {
     private static func classify(_ cutout: CGImage) -> Match? {
         guard let flat = flattenedOnWhite(cutout) else { return nil }
         let request = VNClassifyImageRequest()
+        request.runOnCPUInSimulator()
         try? VNImageRequestHandler(cgImage: flat).perform([request])
         let labels = (request.results ?? []).filter { $0.confidence > 0.08 }
         // Labels arrive most-confident first; the first one naming a garment wins, but a generic
@@ -190,10 +220,57 @@ nonisolated enum ClothingAnalyzer {
         }
     }
 
+    // MARK: - Studio polish
+
+    /// Softens wrinkles and uneven room lighting so a photo of a piece on the bed reads more like
+    /// a product shot. Crease shading is multiplicative, so each pixel is brightened by the ratio
+    /// of coarse to fine local luminance: folds even out while colour and fine texture stay. The
+    /// gain is clamped, so prints, seams and pleats (strong contrast) survive. Silhouettes are
+    /// unchanged — it can't truly iron the garment.
+    private static func studioPolish(_ cutout: CGImage) -> CGImage? {
+        let input = CIImage(cgImage: cutout)
+        let extent = input.extent
+        let side = max(extent.width, extent.height)
+
+        // The blur runs on premultiplied pixels, so the transparent surroundings carry no weight.
+        func luminance(sigma: CGFloat) -> CIImage {
+            let weights = CIVector(x: 0.2126, y: 0.7152, z: 0.0722, w: 0)
+            return input.applyingGaussianBlur(sigma: sigma).cropped(to: extent).unpremultiplyingAlpha()
+                .applyingFilter("CIColorMatrix", parameters: [
+                    "inputRVector": weights, "inputGVector": weights, "inputBVector": weights,
+                    "inputAVector": CIVector(x: 0, y: 0, z: 0, w: 0),
+                    // A small floor keeps the division below finite on black fabric.
+                    "inputBiasVector": CIVector(x: 0.002, y: 0.002, z: 0.002, w: 1),
+                ])
+        }
+        let fine = luminance(sigma: side * 0.004)
+        let coarse = luminance(sigma: side * 0.035)
+        let gain = coarse
+            .applyingFilter("CIDivideBlendMode", parameters: [kCIInputBackgroundImageKey: fine])
+            .applyingFilter("CIGammaAdjust", parameters: ["inputPower": 0.8])
+            // Mostly lifts shadows; darkening highlights would dull light fabrics.
+            .applyingFilter("CIColorClamp", parameters: [
+                "inputMinComponents": CIVector(x: 0.9, y: 0.9, z: 0.9, w: 1),
+                "inputMaxComponents": CIVector(x: 1.35, y: 1.35, z: 1.35, w: 1),
+            ])
+        let evened = gain
+            .applyingFilter("CIMultiplyCompositing", parameters: [
+                kCIInputBackgroundImageKey: input.unpremultiplyingAlpha().settingAlphaOne(in: extent),
+            ])
+            .applyingFilter("CIHighlightShadowAdjust", parameters: ["inputShadowAmount": 0.25, "inputHighlightAmount": 1.0])
+            .applyingFilter("CISharpenLuminance", parameters: ["inputSharpness": 0.35, "inputRadius": 1.5])
+            .cropped(to: extent)
+        // Put the original silhouette back.
+        let output = evened.applyingFilter("CIBlendWithAlphaMask", parameters: [
+            kCIInputBackgroundImageKey: CIImage.empty(), kCIInputMaskImageKey: input,
+        ])
+        return context.createCGImage(output, from: extent)
+    }
+
     // MARK: - Image helpers
 
     /// Upright, sRGB, at most `maxSide` on the longest edge.
-    private static func normalized(_ image: UIImage) -> CGImage? {
+    static func normalized(_ image: UIImage) -> CGImage? {
         let scale = min(1, maxSide / max(image.size.width, image.size.height))
         let size = CGSize(width: (image.size.width * scale).rounded(), height: (image.size.height * scale).rounded())
         let format = UIGraphicsImageRendererFormat()
@@ -221,6 +298,13 @@ nonisolated enum ClothingAnalyzer {
     /// every edge — the same geometry as the bundled `<id>Sticker` assets.
     static let stickerBorder: CGFloat = 0.042
 
+    /// A white die-cut sticker for a cutout made elsewhere (the studio photos).
+    static func sticker(for cutout: CGImage) -> CGImage? { makeSticker(from: cutout) }
+
+    /// The largest foreground subject, lifted off its background. Nil where Vision can't lift
+    /// (the Simulator).
+    static func liftLargestSubject(_ image: CGImage) -> CGImage? { liftSubjects(from: image).first }
+
     private static func makeSticker(from cutout: CGImage) -> CGImage? {
         let pad = (stickerBorder * CGFloat(max(cutout.width, cutout.height))).rounded()
         let canvas = CGRect(x: 0, y: 0, width: CGFloat(cutout.width) + pad * 2, height: CGFloat(cutout.height) + pad * 2)
@@ -236,5 +320,20 @@ nonisolated enum ClothingAnalyzer {
             .applyingFilter("CIMorphologyMaximum", parameters: [kCIInputRadiusKey: pad])
             .applyingFilter("CIGaussianBlur", parameters: [kCIInputRadiusKey: 1.0])
         return context.createCGImage(piece.composited(over: border).cropped(to: canvas), from: canvas)
+    }
+}
+
+extension VNRequest {
+    /// The Simulator has no Neural Engine, so Vision's ML requests fail there ("Could not create
+    /// inference context") unless they're pinned to the CPU. No effect on a device.
+    nonisolated func runOnCPUInSimulator() {
+        #if targetEnvironment(simulator)
+        guard let stages = try? supportedComputeStageDevices else { return }
+        for (stage, devices) in stages {
+            if let cpu = devices.first(where: { if case .cpu = $0 { true } else { false } }) {
+                setComputeDevice(cpu, for: stage)
+            }
+        }
+        #endif
     }
 }

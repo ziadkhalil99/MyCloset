@@ -1,6 +1,6 @@
 import Foundation
 
-enum Vibe: String, CaseIterable, Identifiable {
+enum Vibe: String, CaseIterable, Identifiable, Codable {
     case cozy, edgy, romantic, sporty, preppy, classic
 
     var id: String { rawValue }
@@ -19,8 +19,24 @@ enum Vibe: String, CaseIterable, Identifiable {
     }
 }
 
-/// What onboarding learns. It only changes wording (name, vibe, occasions), not which looks she gets.
-struct OnboardingProfile {
+/// What onboarding learns. Her occasions pick the captions on her looks; the rest changes wording.
+/// Saved to UserDefaults so it survives relaunches.
+struct OnboardingProfile: Codable {
+    private static let storageKey = "onboarding.profile"
+
+    static func load() -> OnboardingProfile {
+        guard let data = UserDefaults.standard.data(forKey: storageKey),
+              let profile = try? JSONDecoder().decode(OnboardingProfile.self, from: data)
+        else { return OnboardingProfile() }
+        return profile
+    }
+
+    func save() {
+        if let data = try? JSONEncoder().encode(self) { UserDefaults.standard.set(data, forKey: Self.storageKey) }
+    }
+
+    static func reset() { UserDefaults.standard.removeObject(forKey: storageKey) }
+
     static let frequencies = ["Every single morning", "A few times a week", "Before anything special", "Honestly, rarely"]
     static let occasionOptions = ["Work", "Campus", "Errands", "Working from home", "Nights out", "Travel", "Gym", "Date night"]
     static let goals = ["Get ready in minutes", "Wear more of what I own", "Stop buying things I don't wear", "Find my style"]

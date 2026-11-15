@@ -5,6 +5,7 @@ struct LooksView: View {
     @Environment(ClosetStore.self) private var store
     @State private var currentID: String?
     @State private var wearCount = 0
+    @State private var showScan = false
 
     private var looks: [Look] { store.lookBook.looks }
     private var current: Look? { looks.first { $0.id == (currentID ?? looks.first?.id) } }
@@ -14,6 +15,11 @@ struct LooksView: View {
             VStack(alignment: .leading, spacing: 0) {
                 header
                     .padding(.horizontal, Theme.screenPadding)
+                if looks.isEmpty {
+                    emptyState
+                        .padding(.horizontal, Theme.screenPadding)
+                        .padding(.top, 24)
+                }
                 carousel
                     .padding(.top, 20)
                 pageDots
@@ -29,6 +35,33 @@ struct LooksView: View {
         .scrollIndicators(.hidden)
         .background(Theme.paper.ignoresSafeArea())
         .sensoryFeedback(.success, trigger: wearCount)
+        .fullScreenCover(isPresented: $showScan) {
+            ScanView { showScan = false }
+        }
+    }
+
+    /// No outfit yet: says what to scan next.
+    private var emptyState: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Image(systemName: "hanger")
+                .font(.system(size: 24, weight: .medium))
+                .foregroundStyle(Theme.accent)
+            Text("Your looks start here")
+                .font(.display(24))
+                .foregroundStyle(Theme.ink)
+            Text("Scan \(LookStylist.nextNeeded(store.items) ?? "a few more pieces") and we'll style your first look.")
+                .font(.system(size: 15))
+                .foregroundStyle(Theme.inkSoft)
+                .fixedSize(horizontal: false, vertical: true)
+            Button { showScan = true } label: {
+                Label("Scan a piece", systemImage: "camera.viewfinder")
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .padding(.top, 4)
+        }
+        .padding(20)
+        .background(Theme.card, in: .rect(cornerRadius: Theme.cardRadius))
+        .overlay(RoundedRectangle(cornerRadius: Theme.cardRadius).strokeBorder(Theme.line, lineWidth: 1))
     }
 
     /// "Good morning, Sara" once onboarding has her name, otherwise "Today's looks".
@@ -49,7 +82,7 @@ struct LooksView: View {
             Text(greeting)
                 .font(.display(36))
                 .foregroundStyle(Theme.ink)
-            Text("\(looks.count) outfits from \(store.items.filter { !$0.isWishlist }.count) pieces you own")
+            Text("\(looks.count) \(looks.count == 1 ? "outfit" : "outfits") from \(store.items.filter { !$0.isWishlist }.count) pieces you own")
                 .font(.system(size: 15))
                 .foregroundStyle(Theme.inkSoft)
         }
@@ -112,8 +145,8 @@ struct LooksView: View {
         let worn = store.wornLookID == look.id
         return VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 10) {
-                ForEach(look.items) { piece in
-                    Image(piece.cutout)
+                ForEach(store.pieces(of: look)) { piece in
+                    piece.cutoutImage
                         .resizable()
                         .scaledToFit()
                         .padding(9)
@@ -123,7 +156,7 @@ struct LooksView: View {
                         .accessibilityLabel(piece.name)
                 }
                 Spacer(minLength: 0)
-                Text("\(look.items.count) pieces")
+                Text("\(look.pieces.count) pieces")
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(Theme.inkSoft)
             }

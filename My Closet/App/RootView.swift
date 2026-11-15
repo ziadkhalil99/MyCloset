@@ -1,21 +1,34 @@
 import SwiftUI
 
-/// The Figma flow, in order: Welcome → questions → how scanning works → scan → building →
-/// reveal → paywall → the app. It always opens on Welcome so it can be recorded start to finish.
+/// The flow, in order: Welcome → questions → her outfit photos (she picks them, keeps the pieces
+/// that are hers) or, instead, how scanning works → camera scan → building → reveal → try-on
+/// (the demo video, then her full-length photo) → paywall → the app.
+/// Onboarding runs once; after that the app opens on Today.
 /// Each step replaces the last; there is no going back into onboarding.
 struct RootView: View {
-    private enum Stage { case welcome, questions, scanIntro, scan, building, reveal, paywall, main }
+    private enum Stage { case welcome, questions, outfitPhotos, scanIntro, scan, building, reveal, tryOn, paywall, main }
 
-    @State private var store = ClosetStore()
+    // `stage` first: its initial value may reset the saved profile before the store loads it.
     @State private var stage: Stage = Self.initialStage
+    @State private var store = ClosetStore()
 
-    /// Debug builds launched with `-skipOnboarding` open straight on the closet,
-    /// handy for checking pieces added from the share sheet.
+    private static let completedKey = "onboarding.completed"
+
+    /// Debug builds launched with `-skipOnboarding` open straight on the app, `-outfitPhotos` on
+    /// the outfit photo picker, `-tryOn` on the try-on intro; `-resetOnboarding` forgets the finished onboarding and her answers so it
+    /// runs again (scanned pieces stay).
     private static var initialStage: Stage {
         #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("-skipOnboarding") { return .main }
+        let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("-resetOnboarding") {
+            UserDefaults.standard.removeObject(forKey: completedKey)
+            OnboardingProfile.reset()
+        }
+        if arguments.contains("-skipOnboarding") { return .main }
+        if arguments.contains("-outfitPhotos") { return .outfitPhotos }
+        if arguments.contains("-tryOn") { return .tryOn }
         #endif
-        return .welcome
+        return UserDefaults.standard.bool(forKey: completedKey) ? .main : .welcome
     }
 
     var body: some View {
@@ -24,15 +37,19 @@ struct RootView: View {
             case .welcome:
                 WelcomeView { go(.questions) }
             case .questions:
-                OnboardingQuestionsView { go(.scanIntro) }
+                OnboardingQuestionsView { go(.outfitPhotos) }
+            case .outfitPhotos:
+                OutfitPhotosView(onDone: { go(.building) }, onCamera: { go(.scanIntro) })
             case .scanIntro:
                 ScanIntroView { go(.scan) }
             case .scan:
-                ScanView(finishTitle: "Style my looks") { go(.building) }
+                ScanView(finishTitle: "Style my looks", requiresOutfit: true) { go(.building) }
             case .building:
                 BuildingView { go(.reveal) }
             case .reveal:
-                RevealView { go(.paywall) }
+                RevealView { go(.tryOn) }
+            case .tryOn:
+                TryOnFlowView { go(.paywall) }
             case .paywall:
                 PaywallView { go(.main) }
             case .main:
@@ -46,6 +63,7 @@ struct RootView: View {
     }
 
     private func go(_ next: Stage) {
+        if next == .main { UserDefaults.standard.set(true, forKey: Self.completedKey) }
         withAnimation(.easeInOut(duration: 0.4)) { stage = next }
     }
 }

@@ -42,7 +42,7 @@ struct LookCanvas: View {
         let rot = look.mirror ? -piece.rot : piece.rot
         // Reduce Motion: pieces cross-fade in place instead of dropping onto the card.
         let travel = !reduceMotion
-        return Image(piece.item)
+        return ClosetItem.cutoutImage(id: piece.item)
             .resizable()
             .scaledToFit()
             .frame(width: piece.w * size.width)

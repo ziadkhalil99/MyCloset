@@ -17,6 +17,7 @@ struct ClosetView: View {
                     header
                     if !tipDismissed { screenshotTip }
                     chips
+                    if store.items.isEmpty { emptyCloset }
                     LazyVGrid(columns: columns, spacing: 18) {
                         ForEach(store.items(in: filter)) { item in
                             Button { selected = item } label: { ItemTile(item: item, isNew: store.recentlyAdded.contains(item.id)) }
@@ -64,7 +65,7 @@ struct ClosetView: View {
                 Text("Add from screenshots")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(Theme.ink)
-                Text("Screenshot a piece while you shop, tap the preview, then Share → My Closet.")
+                Text("Screenshot a piece while you shop, tap the preview, then Share → ClosetAi.")
                     .font(.system(size: 14))
                     .foregroundStyle(Theme.inkSoft)
                     .fixedSize(horizontal: false, vertical: true)
@@ -87,12 +88,33 @@ struct ClosetView: View {
         .transition(.opacity.combined(with: .scale(scale: 0.96)))
     }
 
+    private var emptyCloset: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "camera.viewfinder")
+                .font(.system(size: 28, weight: .medium))
+                .foregroundStyle(Theme.inkSoft)
+            Text("Nothing here yet")
+                .font(.display(22))
+                .foregroundStyle(Theme.ink)
+            Text("Scan a piece with the camera, or share a screenshot to ClosetAi.")
+                .font(.system(size: 15))
+                .foregroundStyle(Theme.inkSoft)
+                .multilineTextAlignment(.center)
+            Button("Scan a piece") { showScan = true }
+                .buttonStyle(PrimaryButtonStyle())
+                .padding(.top, 6)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 40)
+        .padding(.top, 40)
+    }
+
     private var header: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("My closet")
                 .font(.display(36))
                 .foregroundStyle(Theme.ink)
-            Text("\(store.items.count) pieces · \(store.lookBook.looks.count) looks")
+            Text("\(store.items.count) \(store.items.count == 1 ? "piece" : "pieces") · \(store.lookBook.looks.count) \(store.lookBook.looks.count == 1 ? "look" : "looks")")
                 .font(.system(size: 15))
                 .foregroundStyle(Theme.inkSoft)
         }

@@ -9,6 +9,9 @@ import SwiftUI
 
 @main
 struct My_ClosetApp: App {
+    /// Receives iOS's wake-ups for studio photos that finished uploading in the background.
+    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+
     init() {
         FontRegistrar.registerBundledFonts()
     }
