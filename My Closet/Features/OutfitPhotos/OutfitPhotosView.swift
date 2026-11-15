@@ -110,9 +110,9 @@ struct OutfitPhotosView: View {
                       photoLibrary: .shared())
         .task(id: phase) {
             // The selfie guide comes up by itself the first time she lands on this step.
-            guard phase == .me, references.isEmpty, !shownSelfieTipsOnce else { return }
+            guard canAutoPresentSelfieTips else { return }
             try? await Task.sleep(for: .seconds(0.6))
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled, canAutoPresentSelfieTips else { return }
             shownSelfieTipsOnce = true
             showSelfieTips = true
         }
@@ -590,17 +590,38 @@ struct OutfitPhotosView: View {
 
     // MARK: - Bottom bar
 
+    /// Skip the delayed how-to sheet if she already started capture — presenting both at
+    /// once fights over the window.
+    private var canAutoPresentSelfieTips: Bool {
+        phase == .me
+            && references.isEmpty
+            && !shownSelfieTipsOnce
+            && !showSelfieCamera
+            && !showReferencePicker
+    }
+
     @ViewBuilder
     private var selfieSourceButtons: some View {
-        Button("Take a selfie") { showSelfieCamera = true }
+        Button("Take a selfie") { startSelfieCapture(.camera) }
             .buttonStyle(PrimaryButtonStyle())
             .padding(.top, 6)
             .disabled(isReadingReference || !CameraPicker.isAvailable)
             .opacity(CameraPicker.isAvailable ? 1 : 0.45)
-        Button("Choose a photo instead") { showReferencePicker = true }
+        Button("Choose a photo instead") { startSelfieCapture(.library) }
             .buttonStyle(PrimaryButtonStyle())
             .padding(.top, 6)
             .disabled(isReadingReference)
+    }
+
+    private enum SelfieSource { case camera, library }
+
+    private func startSelfieCapture(_ source: SelfieSource) {
+        shownSelfieTipsOnce = true
+        showSelfieTips = false
+        switch source {
+        case .camera: showSelfieCamera = true
+        case .library: showReferencePicker = true
+        }
     }
 
     @ViewBuilder
