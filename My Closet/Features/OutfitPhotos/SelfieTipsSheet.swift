@@ -1,11 +1,12 @@
 import SwiftUI
 
-/// Bottom sheet before her selfie: what a good one looks like, what doesn't work, and the two
-/// ways to add it. The "don't" examples are the good example made too dark, blurry, too far away
-/// and covered, so the difference is easy to see.
+/// How-to sheet for the selfie step: what a good one looks like and what doesn't work.
+/// Shown the first time she lands on "First, a selfie", and again from the info button
+/// next to the placeholder. Capture lives on that first screen, not here.
+/// The "don't" examples are the good example made too dark, blurry, too far away and
+/// covered, so the difference is easy to see.
 struct SelfieTipsSheet: View {
-    let onCamera: () -> Void
-    let onLibrary: () -> Void
+    @Environment(\.dismiss) private var dismiss
 
     private static let example = UIImage(named: "SelfieExample.jpg")
 
@@ -76,23 +77,12 @@ struct SelfieTipsSheet: View {
         }
         .scrollBounceBehavior(.basedOnSize)
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            VStack(spacing: 4) {
-                if CameraPicker.isAvailable {
-                    Button("Take a selfie", action: onCamera)
-                        .buttonStyle(PrimaryButtonStyle())
-                    Button("Choose a photo instead", action: onLibrary)
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(Theme.inkSoft)
-                        .frame(minHeight: 44)
-                } else {
-                    Button("Choose a photo of you", action: onLibrary)
-                        .buttonStyle(PrimaryButtonStyle())
-                }
-            }
-            .padding(.horizontal, Theme.screenPadding)
-            .padding(.top, 12)
-            .padding(.bottom, 8)
-            .background(Theme.paper)
+            Button("Got it") { dismiss() }
+                .buttonStyle(PrimaryButtonStyle())
+                .padding(.horizontal, Theme.screenPadding)
+                .padding(.top, 12)
+                .padding(.bottom, 8)
+                .background(Theme.paper)
         }
         .background(Theme.paper)
     }
@@ -103,9 +93,9 @@ struct SelfieTipsSheet: View {
         VStack(spacing: 10) {
             face(size: 132)
                 .clipShape(Circle())
-                .overlay(Circle().strokeBorder(Theme.ink, lineWidth: 3))
+                .overlay(Circle().strokeBorder(Theme.success, lineWidth: 3))
                 .overlay(alignment: .bottomTrailing) {
-                    badge(systemName: "checkmark", fill: Theme.ink, size: 32)
+                    badge(systemName: "checkmark", fill: Theme.success, size: 32)
                 }
             Text("Like this")
                 .font(.hand(20))
@@ -178,7 +168,7 @@ struct SelfieTipsSheet: View {
 
 #Preview {
     Color.clear.sheet(isPresented: .constant(true)) {
-        SelfieTipsSheet(onCamera: {}, onLibrary: {})
+        SelfieTipsSheet()
             .presentationDetents([.large])
     }
 }

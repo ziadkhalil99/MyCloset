@@ -28,8 +28,6 @@ struct OutfitPhotosView: View {
 
     private struct RetakeTarget: Identifiable { let id: UUID }
 
-    private enum SelfieSource { case camera, library }
-
     private enum Phase: Equatable { case me, picking, reading(Int), review }
 
     private static let maxPhotos = 15
@@ -46,8 +44,7 @@ struct OutfitPhotosView: View {
     @State private var showSelfieCamera = false
     @State private var showSelfieTips = false
     @State private var showReferencePicker = false
-    /// What she chose in the selfie sheet, opened once the sheet has gone.
-    @State private var afterSelfieTips: SelfieSource?
+    /// The how-to sheet comes up by itself the first time she lands on this step.
     @State private var shownSelfieTipsOnce = false
     @State private var retakeTarget: RetakeTarget?
     @State private var candidates: [OutfitPhotoReader.Candidate] = []
@@ -102,30 +99,20 @@ struct OutfitPhotosView: View {
                 if let data, let image = UIImage(data: data) { await addReference(image) }
             }
         }
-        .sheet(isPresented: $showSelfieTips, onDismiss: {
-            switch afterSelfieTips {
-            case .camera: showSelfieCamera = true
-            case .library: showReferencePicker = true
-            case nil: break
-            }
-            afterSelfieTips = nil
-        }) {
-            SelfieTipsSheet(
-                onCamera: { afterSelfieTips = .camera; showSelfieTips = false },
-                onLibrary: { afterSelfieTips = .library; showSelfieTips = false }
-            )
-            .presentationDetents([.large])
-            .presentationDragIndicator(.visible)
-            .presentationCornerRadius(32)
-            .presentationBackground(Theme.paper)
+        .sheet(isPresented: $showSelfieTips) {
+            SelfieTipsSheet()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(32)
+                .presentationBackground(Theme.paper)
         }
         .photosPicker(isPresented: $showReferencePicker, selection: $referenceItem, matching: .images,
                       photoLibrary: .shared())
         .task(id: phase) {
             // The selfie guide comes up by itself the first time she lands on this step.
-            guard phase == .me, references.isEmpty, !shownSelfieTipsOnce else { return }
+            guard canAutoPresentSelfieTips else { return }
             try? await Task.sleep(for: .seconds(0.6))
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled, canAutoPresentSelfieTips else { return }
             shownSelfieTipsOnce = true
             showSelfieTips = true
         }
@@ -206,16 +193,11 @@ struct OutfitPhotosView: View {
                         .transition(.scale(scale: 0.6).combined(with: .opacity))
                 }
                 if references.isEmpty {
-                    Circle()
-                        .fill(Theme.card)
-                        .frame(width: 150, height: 150)
-                        .overlay {
-                            Image(systemName: "person.crop.circle.badge.checkmark")
-                                .font(.system(size: 54, weight: .light))
-                                .foregroundStyle(Theme.inkSoft)
+                    selfiePlaceholder
+                        .overlay(alignment: .bottomTrailing) {
+                            selfieInfoButton
+                                .offset(x: 6, y: 6)
                         }
-                        .overlay(Circle().strokeBorder(Theme.inkSoft.opacity(0.45), style: StrokeStyle(lineWidth: 1.5, dash: [7, 6])))
-                        .overlay { if isReadingReference { ProgressView() } }
                 }
             }
             .animation(.spring(duration: 0.45, bounce: 0.3), value: references.map(\.id))
@@ -231,7 +213,7 @@ struct OutfitPhotosView: View {
                                                 : "Got it. We'll know you in your photos.",
                       systemImage: "checkmark.circle.fill")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.success)
                     .multilineTextAlignment(.center)
             }
             Spacer(minLength: 0)
@@ -252,6 +234,37 @@ struct OutfitPhotosView: View {
         .entrance(appeared, delay: 0.12, reduceMotion: reduceMotion)
     }
 
+    private var selfiePlaceholder: some View {
+        Circle()
+            .fill(Theme.card)
+            .frame(width: 150, height: 150)
+            .overlay {
+                Image(systemName: "person.crop.circle.badge.checkmark")
+                    .font(.system(size: 54, weight: .light))
+                    .foregroundStyle(Theme.inkSoft)
+            }
+            .overlay(Circle().strokeBorder(Theme.inkSoft.opacity(0.45), style: StrokeStyle(lineWidth: 1.5, dash: [7, 6])))
+            .overlay { if isReadingReference { ProgressView() } }
+            .accessibilityLabel("Selfie placeholder")
+    }
+
+    private var selfieInfoButton: some View {
+        Button {
+            showSelfieTips = true
+        } label: {
+            Image(systemName: "info.circle")
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(Theme.inkSoft)
+                .frame(width: 36, height: 36)
+                .background(Theme.card, in: Circle())
+                .overlay(Circle().strokeBorder(Theme.line))
+                .frame(width: 44, height: 44)
+                .contentShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("See how to take a selfie")
+    }
+
     private func referenceCircle(_ reference: Reference) -> some View {
         let size: CGFloat = references.count == 1 ? 150 : 96
         let isGood = (try? reference.result.get()) != nil
@@ -260,13 +273,13 @@ struct OutfitPhotosView: View {
             .scaledToFill()
             .frame(width: size, height: size)
             .clipShape(Circle())
-            .overlay(Circle().strokeBorder(isGood ? Theme.ink : Theme.accent, lineWidth: 3))
+                    .overlay(Circle().strokeBorder(isGood ? Theme.success : Theme.accent, lineWidth: 3))
             .overlay(alignment: .bottomTrailing) {
                 Image(systemName: isGood ? "checkmark" : "exclamationmark")
                     .font(.system(size: 12, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(width: 28, height: 28)
-                    .background(isGood ? Theme.ink : Theme.accent, in: Circle())
+                    .background(isGood ? Theme.success : Theme.accent, in: Circle())
                     .overlay(Circle().strokeBorder(Theme.paper, lineWidth: 2))
             }
             .overlay(alignment: .topTrailing) {
@@ -577,6 +590,40 @@ struct OutfitPhotosView: View {
 
     // MARK: - Bottom bar
 
+    /// Skip the delayed how-to sheet if she already started capture — presenting both at
+    /// once fights over the window.
+    private var canAutoPresentSelfieTips: Bool {
+        phase == .me
+            && references.isEmpty
+            && !shownSelfieTipsOnce
+            && !showSelfieCamera
+            && !showReferencePicker
+    }
+
+    @ViewBuilder
+    private var selfieSourceButtons: some View {
+        Button("Take a selfie") { startSelfieCapture(.camera) }
+            .buttonStyle(PrimaryButtonStyle())
+            .padding(.top, 6)
+            .disabled(isReadingReference || !CameraPicker.isAvailable)
+            .opacity(CameraPicker.isAvailable ? 1 : 0.45)
+        Button("Choose a photo instead") { startSelfieCapture(.library) }
+            .buttonStyle(PrimaryButtonStyle())
+            .padding(.top, 6)
+            .disabled(isReadingReference)
+    }
+
+    private enum SelfieSource { case camera, library }
+
+    private func startSelfieCapture(_ source: SelfieSource) {
+        shownSelfieTipsOnce = true
+        showSelfieTips = false
+        switch source {
+        case .camera: showSelfieCamera = true
+        case .library: showReferencePicker = true
+        }
+    }
+
     @ViewBuilder
     private var bottomBar: some View {
         VStack(spacing: 4) {
@@ -588,21 +635,9 @@ struct OutfitPhotosView: View {
                         phase = .picking
                     }
                     .buttonStyle(PrimaryButtonStyle())
-                    if references.count < 3 {
-                        Button("Add another selfie") { showSelfieTips = true }
-                            .font(.system(size: 15, weight: .semibold))
-                            .foregroundStyle(Theme.inkSoft)
-                            .frame(minHeight: 44)
-                            .disabled(isReadingReference)
-                    }
-                } else {
-                    Button("Add your selfie") { showSelfieTips = true }
-                        .buttonStyle(PrimaryButtonStyle())
-                        .disabled(isReadingReference)
-                    Button("See how to take it", systemImage: "questionmark.circle") { showSelfieTips = true }
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(Theme.inkSoft)
-                        .frame(minHeight: 44)
+                }
+                if references.count < 3 {
+                    selfieSourceButtons
                 }
             case .picking:
                 Button("Find my clothes", action: startReading)
