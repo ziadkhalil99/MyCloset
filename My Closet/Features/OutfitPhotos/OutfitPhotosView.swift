@@ -231,7 +231,7 @@ struct OutfitPhotosView: View {
                                                 : "Got it. We'll know you in your photos.",
                       systemImage: "checkmark.circle.fill")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.success)
                     .multilineTextAlignment(.center)
             }
             Spacer(minLength: 0)
@@ -260,13 +260,13 @@ struct OutfitPhotosView: View {
             .scaledToFill()
             .frame(width: size, height: size)
             .clipShape(Circle())
-            .overlay(Circle().strokeBorder(isGood ? Theme.ink : Theme.accent, lineWidth: 3))
+                    .overlay(Circle().strokeBorder(isGood ? Theme.success : Theme.accent, lineWidth: 3))
             .overlay(alignment: .bottomTrailing) {
                 Image(systemName: isGood ? "checkmark" : "exclamationmark")
                     .font(.system(size: 12, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(width: 28, height: 28)
-                    .background(isGood ? Theme.ink : Theme.accent, in: Circle())
+                    .background(isGood ? Theme.success : Theme.accent, in: Circle())
                     .overlay(Circle().strokeBorder(Theme.paper, lineWidth: 2))
             }
             .overlay(alignment: .topTrailing) {
@@ -590,9 +590,8 @@ struct OutfitPhotosView: View {
                     .buttonStyle(PrimaryButtonStyle())
                     if references.count < 3 {
                         Button("Add another selfie") { showSelfieTips = true }
-                            .font(.system(size: 15, weight: .semibold))
-                            .foregroundStyle(Theme.inkSoft)
-                            .frame(minHeight: 44)
+                            .buttonStyle(PrimaryButtonStyle())
+                            .padding(.top, 6)
                             .disabled(isReadingReference)
                     }
                 } else {

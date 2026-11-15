@@ -76,18 +76,13 @@ struct SelfieTipsSheet: View {
         }
         .scrollBounceBehavior(.basedOnSize)
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            VStack(spacing: 4) {
-                if CameraPicker.isAvailable {
-                    Button("Take a selfie", action: onCamera)
-                        .buttonStyle(PrimaryButtonStyle())
-                    Button("Choose a photo instead", action: onLibrary)
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(Theme.inkSoft)
-                        .frame(minHeight: 44)
-                } else {
-                    Button("Choose a photo of you", action: onLibrary)
-                        .buttonStyle(PrimaryButtonStyle())
-                }
+            VStack(spacing: 10) {
+                Button("Take a selfie", action: onCamera)
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(!CameraPicker.isAvailable)
+                    .opacity(CameraPicker.isAvailable ? 1 : 0.45)
+                Button("Choose a photo instead", action: onLibrary)
+                    .buttonStyle(PrimaryButtonStyle())
             }
             .padding(.horizontal, Theme.screenPadding)
             .padding(.top, 12)
@@ -103,9 +98,9 @@ struct SelfieTipsSheet: View {
         VStack(spacing: 10) {
             face(size: 132)
                 .clipShape(Circle())
-                .overlay(Circle().strokeBorder(Theme.ink, lineWidth: 3))
+                .overlay(Circle().strokeBorder(Theme.success, lineWidth: 3))
                 .overlay(alignment: .bottomTrailing) {
-                    badge(systemName: "checkmark", fill: Theme.ink, size: 32)
+                    badge(systemName: "checkmark", fill: Theme.success, size: 32)
                 }
             Text("Like this")
                 .font(.hand(20))

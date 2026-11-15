@@ -10,6 +10,8 @@ enum Theme {
     static let inkSoft = Color(hex: 0x7A6F66)
     static let line = Color(hex: 0xE4DBCF)
     static let accent = Color(hex: 0x6E1F2B)
+    /// Correct / success — green ring on the “right selfie” example.
+    static let success = Color(hex: 0x2FA36B)
 
     static let screenPadding: CGFloat = 20
     static let cardRadius: CGFloat = 28
